@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ToolBox | Pratik Dijital Araçlar</title>
+    
+    <!-- =======================================================================
+         MONETAG REKLAM ALANI (KAFANIN İÇİ - HEAD SECTION)
+         Eğer Monetag'dan aldığınız Popunder, Smart Tag, Vignette veya Anti-Adblock 
+         kodunuz varsa, aşağıdaki açıklamalı satırların arasına yapıştırın.
+         ======================================================================= -->
+    <!-- MONETAG HEAD SCRIPT BAŞLANGICI -->
+    <!-- 
+    <script src="https://alwingulla.com/88/push.js" async></script> 
+    -->
+    <!-- MONETAG HEAD SCRIPT BİTİŞİ -->
+
+    <style>
+        /* ================= DEĞİŞKENLER & TEMEL ================= */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
+            --glass-hover: rgba(255, 255, 255, 0.12);
+            --text-color: #ffffff;
+            --accent: #ffb703; 
+            --accent2: #ff007f;
+            --app-logo-color: var(--accent); 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #0d0822, #1a1040, #0a2533);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .blob { position: fixed; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.5; }
+        .blob1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent2); animation: float 12s ease-in-out infinite; }
+        .blob2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--accent); animation: float 15s ease-in-out infinite reverse; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 25px;
+        }
+
+        .app-logo {
+            color: var(--app-logo-color);
+            font-size: 1.5rem;
+            margin-right: 8px;
+            text-shadow: 0 0 10px rgba(255, 183, 3, 0.7);
+        }
+
+        .dynamic-island {
+            position: fixed;
+            top: 20px;
+            width: 90%;
+            max-width: 300px;
+            height: 60px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        .dynamic-island:hover {
+            max-width: 900px;
+            width: 95%;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            right: 10px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+        
+        .nav-links::-webkit-scrollbar { display: none; } 
+
+        .dynamic-island:hover .nav-links {
+            opacity: 1;
+            pointer-events: all;
+            position: relative;
+            right: 0;
+        }
+
+        .nav-links button {
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links button:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+
+        .view-section {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            padding: 100px 20px 50px;
+            animation: viewEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .view-section.active { display: flex; flex-direction: column; align-items: center; flex: 1; }
+
+        @keyframes viewEnter {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .hero-content {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .hero-content h1 { 
+            font-size: clamp(2.2rem, 6vw, 3.8rem); 
+            margin-bottom: 25px; 
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+            color: var(--text-color);
+        }
+        
+        .btn-glow {
+            padding: 16px 45px;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: bold;
+            color: #000; 
+            border: none;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            background: linear-gradient(45deg, #ffd700, #ffb703); 
+            box-shadow: 0 5px 25px rgba(255, 183, 3, 0.5);
+            margin-top: 25px;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 0 15px 40px rgba(255, 183, 3, 0.9);
+            color: #fff; 
+        }
+
+        .counter-badge {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: var(--accent);
+            background: rgba(255, 183, 3, 0.1);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 183, 3, 0.2);
+            display: inline-block;
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(255,183,3,0.3);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; }
+        }
+
+        .tool-shortcut {
+            padding: 35px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tool-shortcut:hover {
+            transform: translateY(-12px) scale(1.06);
+            background: var(--glass-hover);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 50px rgba(255, 183, 3, 0.4);
+        }
+        
+        .tool-shortcut i { 
+            font-size: 3.5rem; 
+            display: block; 
+            margin-bottom: 15px; 
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+            font-style: normal; /* İkonların düz durmasını sağlar */
+        }
+        .tool-shortcut h3 { font-size: 1.2rem; margin-top: auto;}
+
+        .tool-page {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-back {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 9px 18px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-back:hover { background: rgba(255,255,255,0.2); transform: translateX(-6px); }
+
+        .tool-title { 
+            font-size: clamp(2rem, 5vw, 2.8rem); 
+            margin-bottom: 40px; 
+            margin-top: 20px;
+            color: var(--accent); 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .input-group { margin-bottom: 20px; width: 100%; max-width: 400px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        
+        input[type="text"], input[type="number"], input[type="color"], select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+            color: white;
+            border-radius: 15px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        select option { background: #1a1040; color: white; }
+        input[type="color"] { padding: 5px; cursor: pointer; height: 48px; }
+        input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,183,3,0.3); }
+
+        textarea { height: 120px; resize: none; }
+
+        .action-btn {
+            padding: 13px 32px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, rgba(255,183,3,0.6), rgba(255,183,3,0.3)); 
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+            border: 1px solid rgba(255,183,3,0.5);
+        }
+        .action-btn:hover { background: var(--accent); transform: scale(1.05); box-shadow: 0 5px 20px var(--accent); color: #fff;}
+
+        .result-display {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.6);
+        }
+
+        /* Modal Css (Kazanan Ekranı vs.) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content {
+            background: linear-gradient(135deg, #1a1040, #0a2533);
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 30px rgba(255,183,3,0.5);
+            padding: 40px; border-radius: 25px; text-align: center;
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%; width: 450px;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-title { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; }
+        .modal-text { font-size: 1.5rem; margin-bottom: 30px; }
+        .close-btn {
+            background: var(--accent); color: #000; border: none; padding: 10px 25px;
+            font-size: 1.2rem; font-weight: bold; border-radius: 20px; cursor: pointer; transition: 0.3s;
+        }
+        .close-btn:hover { background: white; transform: scale(1.05); }
+
+        /* Çark Css */
+        .wheel-wrapper { position: relative; width: 100%; max-width: 350px; aspect-ratio: 1/1; margin: 0 auto 30px; }
+        .wheel-pointer {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid white; z-index: 10;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8));
+        }
+        canvas#wheelCanvas {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.7);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+        .wheel-items-list {
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 500px; margin-bottom: 20px;
+        }
+        .wheel-item-tag {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 12px; border-radius: 18px; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 8px; backdrop-filter: blur(5px);
+        }
+        .wheel-item-tag button { background: transparent; border: none; color: #ff4d4d; font-weight: bold; cursor: pointer; }
+
+        /* Zar Css */
+        .dice-scene { width: 100px; height: 100px; margin: 0 auto 40px; perspective: 600px; }
+        .dice-cube {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(-20deg);
+            transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .dice-face {
+            position: absolute; width: 100px; height: 100px; background: rgba(255,255,255,0.95);
+            border: 2px solid #ccc; border-radius: 15px;
+            display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+            padding: 10px; box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+        }
+        .dot { width: 18px; height: 18px; background: #222; border-radius: 50%; justify-self: center; align-self: center; box-shadow: inset 0 3px 5px rgba(0,0,0,0.5);}
+        .face-1 { transform: translateZ(50px); }
+        .face-2 { transform: rotateY(180deg) translateZ(50px); } /* Burası 2 numaralı yüzey */
+        .face-3 { transform: rotateY(90deg) translateZ(50px); }
+        .face-4 { transform: rotateY(-90deg) translateZ(50px); }
+        .face-5 { transform: rotateX(90deg) translateZ(50px); }
+        .face-6 { transform: rotateX(-90deg) translateZ(50px); } /* Burası 6 numaralı yüzey */
+
+        /* Para Css */
+        .coin-scene { width: 150px; height: 150px; margin: 0 auto 40px; perspective: 800px; }
+        .coin-3d {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d;
+            transition: transform 3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .coin-face-3d {
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: bold; backface-visibility: hidden;
+            border: 8px solid #d4af37; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        .coin-front-3d { background: radial-gradient(circle, #fcf6ba, #bf953f); color: #8a6300; transform: translateZ(5px); }
+        .coin-back-3d { background: radial-gradient(circle, #ececec, #a1a1a1); color: #444; transform: rotateY(180deg) translateZ(5px); border-color: #aaa;}
+        .coin-edge {
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            background: #b38728; transform: translateZ(0); box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Kronometre Css */
+        .timer-display {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+            margin: 20px 0;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .timer-controls { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; justify-content: center;}
+        
+        /* Renk Üretici Css */
+        .color-preview {
+            width: 100px; height: 100px; border-radius: 50%; margin: 20px auto;
+            border: 3px solid white; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: background 0.3s;
+            background: #ffb703;
+        }
+
+        /* Fatura Tablosu Ust Seviye Cam */
+        .invoice-box {
+            width: 100%; max-width: 650px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);
+            padding: 25px; border-radius: 20px; margin-top: 25px; text-align: left;
+        }
+        .invoice-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .invoice-table th, .invoice-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+        .invoice-table th { color: var(--accent); }
+
+        /* Not Defteri Elemanları */
+        .notes-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; width: 100%; max-width: 700px; margin-top: 25px;
+        }
+        .note-card {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 15px; border-radius: 15px; position: relative; text-align: left;
+        }
+        .note-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 1.1rem; }
+        .note-card p { font-size: 0.9rem; color: #ddd; word-break: break-word; }
+        .note-delete-btn { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: #ff4d4d; cursor: pointer; font-weight: bold; }
+
+        /* Reklam Banner Alanı için CSS */
+        .ad-banner-slot {
+            width: 100%; max-width: 728px; min-height: 90px;
+            background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 15px; display: flex; align-items: center; justify-content: center;
+            margin: 25px auto; color: rgba(255,255,255,0.4); font-size: 0.9rem; text-align: center;
+            padding: 10px;
+        }
+
+        /* Footer */
+        footer {
+            width: 100%; text-align: center; padding: 20px; font-size: 0.9rem;
+            color: rgba(255,255,255,0.5); margin-top: auto; 
+            border-top: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(5px); background: rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+
+    <header class="dynamic-island glass">
+        <div class="logo-area" onclick="navigate('home')">
+            <span class="app-logo">🧰</span> ToolBox
+        </div>
+        <nav class="nav-links">
+            <button onclick="navigate('dashboard')">Menü</button>
+            <button onclick="navigate('tool-wheel')">Çark</button>
+            <button onclick="navigate('tool-number')">Sayı</button>
+            <button onclick="navigate('tool-dice')">Zar</button>
+            <button onclick="navigate('tool-coin')">Yazı Tura</button>
+            <button onclick="navigate('tool-pass')">Şifre</button>
+        </nav>
+    </header>
+
+    <!-- Modal (Pop-up) -->
+    <div id="resultModal" class="modal-overlay" onclick="closeModal(true)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 class="modal-title" id="modalTitle">Sonuç</h2>
+            <p class="modal-text" id="modalText"></p>
+            <button class="close-btn" onclick="closeModal(true)">Kapat</button>
+        </div>
+    </div>
+
+    <!-- 1. HERO -->
+    <section id="home" class="view-section active">
+        <div class="hero-content">
+            <h1>Pratik Çözümlerle Hayatını Kolaylaştır</h1>
+            <p style="font-size: clamp(1rem, 2vw, 1.25rem); margin-bottom: 25px; color: #ccc;">
+                Karar çarkı, fatura yazıcı, QR kod üretici ve daha fazlası gibi günlük araçlara tek bir yerden erişin.
+            </p>
+            <button class="btn-glow" onclick="navigate('dashboard')">Araçları Keşfet</button>
+            <br>
+            <div class="counter-badge" id="toolsCounterBadge">Yükleniyor...</div>
+        </div>
+    </section>
+
+    <!-- 2. DASHBOARD -->
+    <section id="dashboard" class="view-section">
+        <h2 style="font-size: clamp(2.2rem, 5.5vw, 3.2rem); text-align: center; text-shadow: 0 5px 12px rgba(0,0,0,0.5);">Bir Araç Seçin</h2>
+        <div class="dashboard-grid" id="mainDashboardGrid">
+            <div class="tool-shortcut glass" onclick="navigate('tool-wheel')">
+                <i>🎡</i>
+                <h3>Karar Çarkı</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-number')">
+                <i>🔢</i>
+                <h3>Sayı Üretici</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-dice')">
+                <i>🎲</i>
+                <h3>Zar Atma</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-coin')">
+                <i>🪙</i>
+                <h3>Yazı Tura</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-pass')">
+                <i>🔐</i>
+                <h3>Şifre Üretici</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-timer')">
+                <i>⏱️</i>
+                <h3>Kronometre</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-color')">
+                <i>🎨</i>
+                <h3>Renk Üretici</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-counter')">
+                <i>📝</i>
+                <h3>Kelime Sayacı</h3>
+            </div>
+            
+            <!-- YENİ EKLENEN ARAÇLAR -->
+            <div class="tool-shortcut glass" onclick="navigate('tool-invoice')">
+                <i>🧾</i>
+                <h3>Fatura Yazıcı</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-qrcode')">
+                <i>🔗</i>
+                <h3>QR Kod Üretici</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-bmi')">
+                <i>⚖️</i>
+                <h3>Vücut Kitle İndeksi</h3>
+            </div>
+            <div class="tool-shortcut glass" onclick="navigate('tool-notepad')">
+                <i>📓</i>
+                <h3>Pratik Not Defteri</h3>
+            </div>
+        </div>
+
+        <!-- =======================================================================
+             MONETAG REKLAM ALANI (BANNER REKLAM ALANI)
+             Eğer Monetag'dan aldığınız banner veya Native ad kodunuz varsa, 
+             aşağıdaki div etiketinin içine yapıştırın.
+             ======================================================================= -->
+        <!-- MONETAG BANNER KOD BAŞLANGICI -->
+        <div class="ad-banner-slot">
+            <div id="monetag-ad-placeholder">
+                <p style="margin-bottom: 5px; font-weight: bold;">[ Reklam Alanı ]</p>
+                <p style="font-size: 0.8rem; opacity: 0.7;">Monetag Banner / Native Reklam Kodunuzu Buraya Yapıştırabilirsiniz.</p>
+            </div>
+            <!-- Kodunuzu tam olarak bu satırın altına ekleyebilirsiniz -->
+        </div>
+        <!-- MONETAG BANNER KOD BİTİŞİ -->
+    </section>
+
+    <!-- 3. ARAÇ SAYFALARI -->
+
+    <!-- A. Çark Aracı -->
+    <section id="tool-wheel" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Karar Çarkı</h2>
+            <div class="wheel-wrapper">
+                <div class="wheel-pointer"></div>
+                <canvas id="wheelCanvas" width="500" height="500"></canvas>
+            </div>
+            <div class="input-group">
+                <input type="text" id="newOptionInput" placeholder="Yeni seçenek yazın..." onkeypress="handleEnter(event)">
+                <button class="action-btn" style="margin-top:0;" onclick="addOption()">Ekle</button>
+            </div>
+            <div class="wheel-items-list" id="wheelItemsList"></div>
+            <button class="action-btn" style="background: var(--accent); color:#000;" onclick="spinWheel()">Çarkı Çevir</button>
+        </div>
+    </section>
+
+    <!-- B. Sayı Aracı -->
+    <section id="tool-number" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Rastgele Sayı</h2>
+            <div class="input-group">
+                <input type="number" id="numMin" placeholder="Min" value="1">
+                <input type="number" id="numMax" placeholder="Max" value="100">
+            </div>
+            <button class="action-btn" onclick="generateNumber()">Sayı Çek</button>
+            <div class="result-display" id="numResult" style="font-size: clamp(3rem, 10vw, 5.5rem); letter-spacing: -2px;">0</div>
+        </div>
+    </section>
+
+    <!-- C. Zar Atma Aracı (Düzeltildi) -->
+    <section id="tool-dice" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Zar Atma</h2>
+            <div class="dice-scene">
+                <div class="dice-cube" id="diceCube">
+                    <!-- 1 Nokta -->
+                    <div class="dice-face face-1"> <div class="dot" style="grid-area: 2/2;"></div> </div>
+                    
+                    <!-- 2 Nokta (Düzeltildi: Sadece 2 nokta içeriyor) -->
+                    <div class="dice-face face-2"> 
+                        <div class="dot" style="grid-area: 1/1;"></div> 
+                        <div class="dot" style="grid-area: 3/3;"></div> 
+                    </div>
+                    
+                    <!-- 3 Nokta -->
+                    <div class="dice-face face-3"> 
+                        <div class="dot" style="grid-area: 1/1;"></div> 
+                        <div class="dot" style="grid-area: 2/2;"></div> 
+                        <div class="dot" style="grid-area: 3/3;"></div> 
+                    </div>
+                    
+                    <!-- 4 Nokta -->
+                    <div class="dice-face face-4"> 
+                        <div class="dot" style="grid-area: 1/1;"></div> 
+                        <div class="dot" style="grid-area: 1/3;"></div> 
+                        <div class="dot" style="grid-area: 3/1;"></div> 
+                        <div class="dot" style="grid-area: 3/3;"></div> 
+                    </div>
+                    
+                    <!-- 5 Nokta -->
+                    <div class="dice-face face-5"> 
+                        <div class="dot" style="grid-area: 1/1;"></div> 
+                        <div class="dot" style="grid-area: 1/3;"></div> 
+                        <div class="dot" style="grid-area: 2/2;"></div> 
+                        <div class="dot" style="grid-area: 3/1;"></div> 
+                        <div class="dot" style="grid-area: 3/3;"></div> 
+                    </div>
+                    
+                    <!-- 6 Nokta (Düzeltildi: Tam 6 nokta içeriyor) -->
+                    <div class="dice-face face-6"> 
+                        <div class="dot" style="grid-area: 1/1;"></div> 
+                        <div class="dot" style="grid-area: 1/3;"></div> 
+                        <div class="dot" style="grid-area: 2/1;"></div> 
+                        <div class="dot" style="grid-area: 2/3;"></div> 
+                        <div class="dot" style="grid-area: 3/1;"></div> 
+                        <div class="dot" style="grid-area: 3/3;"></div> 
+                    </div>
+                </div>
+            </div>
+            <button class="action-btn" onclick="rollDice()">Zarı At</button>
+            <div class="result-display" id="diceResult"></div>
+        </div>
+    </section>
+
+    <!-- D. Yazı Tura Aracı -->
+    <section id="tool-coin" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Yazı Tura</h2>
+            <div class="coin-scene">
+                <div class="coin-3d" id="coin3D">
+                    <div class="coin-edge"></div>
+                    <div class="coin-face-3d coin-front-3d">TURA</div>
+                    <div class="coin-face-3d coin-back-3d">YAZI</div>
+                </div>
+            </div>
+            <button class="action-btn" onclick="flipCoin()">Para At</button>
+            <div class="result-display" id="coinResult"></div>
+        </div>
+    </section>
+
+    <!-- E. Şifre Aracı -->
+    <section id="tool-pass" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Şifre Üretici</h2>
+            <div class="input-group">
+                <input type="number" id="passLen" placeholder="Uzunluk (Örn: 16)" value="16" min="8" max="64">
+            </div>
+            <button class="action-btn" onclick="generatePassword()">Şifre Oluştur</button>
+            <div class="result-display" id="passResult" style="font-size: clamp(1rem, 3.2vw, 1.6rem); word-break: break-all; letter-spacing: 2.5px; font-family: 'Courier New', monospace;"></div>
+        </div>
+    </section>
+
+    <!-- F. Kronometre Aracı -->
+    <section id="tool-timer" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Kronometre</h2>
+            <div class="timer-display" id="timerDisplay">00:00:00.00</div>
+            <div class="timer-controls">
+                <button class="action-btn" onclick="startTimer()">Başlat</button>
+                <button class="action-btn" style="background: rgba(255,255,255,0.1);" onclick="pauseTimer()">Duraklat</button>
+                <button class="action-btn" style="background: rgba(255,77,77,0.3); border-color:#ff4d4d; color:white;" onclick="resetTimer()">Sıfırla</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- G. Renk Üretici -->
+    <section id="tool-color" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Rastgele Renk</h2>
+            <div class="color-preview" id="colorPreview"></div>
+            <div class="result-display" id="colorResult" style="font-size: 2rem; letter-spacing: 2px;">#ffb703</div>
+            <div class="timer-controls">
+                <button class="action-btn" onclick="generateRandomColor()">Renk Üret</button>
+                <button class="action-btn" style="background: rgba(255,255,255,0.1);" onclick="copyColor()">Kopyala</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- H. Kelime Sayacı -->
+    <section id="tool-counter" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Kelime & Karakter Sayacı</h2>
+            <textarea id="textCounter" placeholder="Buraya metninizi yazın veya yapıştırın..." oninput="countText()"></textarea>
+            <div style="display: flex; gap: 30px; margin-top: 20px;">
+                <div>
+                    <h3 style="color: var(--accent); font-size: 2rem;" id="wordCount">0</h3>
+                    <p>Kelime</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--accent); font-size: 2rem;" id="charCount">0</h3>
+                    <p>Karakter</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- I. Fatura Yazıcı (Çalışan Yeni Araç) -->
+    <section id="tool-invoice" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Fatura Yazıcı</h2>
+            <div class="input-group" style="max-width: 500px;">
+                <input type="text" id="invTitle" placeholder="Fatura Başlığı / Şirket Adı" value="Örnek Dijital Ticaret">
+                <input type="text" id="invItem" placeholder="Ürün veya Hizmet Adı" value="Premium Web Paket Hizmeti">
+                <input type="number" id="invPrice" placeholder="Birim Fiyatı (TL)" value="1500">
+                <input type="number" id="invQty" placeholder="Adet / Miktar" value="1">
+                <select id="invKdv">
+                    <option value="20">KDV Oranı (%20)</option>
+                    <option value="10">KDV Oranı (%10)</option>
+                    <option value="1">KDV Oranı (%1)</option>
+                    <option value="0">KDV Oranı (%0)</option>
+                </select>
+            </div>
+            <button class="action-btn" onclick="calculateInvoice()">Fatura Oluştur</button>
+            
+            <div class="invoice-box" id="invoiceBox" style="display: none;">
+                <h3 id="displayInvTitle" style="color: var(--accent); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px;"></h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 5px;" id="invDate"></p>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Hizmet/Ürün</th>
+                            <th>Adet</th>
+                            <th>Birim Fiyat</th>
+                            <th>Toplam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="tdItem"></td>
+                            <td id="tdQty"></td>
+                            <td id="tdPrice"></td>
+                            <td id="tdSubTotal"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="text-align: right; margin-top: 15px; font-size: 1rem; line-height: 1.6;">
+                    <p>Ara Toplam (Matrah): <span id="invMatrah" style="font-weight: bold;"></span> TL</p>
+                    <p>KDV Tutarı: <span id="invKdvAmount" style="font-weight: bold; color: var(--accent2);"></span> TL</p>
+                    <h3 style="margin-top: 5px; color: var(--accent);">Genel Toplam: <span id="invGrandTotal"></span> TL</h3>
+                </div>
+                <button class="action-btn" style="width:100%; margin-top:15px; background:white; color:black;" onclick="window.print()">Faturayı Yazdır / PDF Yap</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- J. QR Kod Üretici (Çalışan Yeni Araç) -->
+    <section id="tool-qrcode" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">QR Kod Üretici</h2>
+            <div class="input-group">
+                <input type="text" id="qrInput" placeholder="Yazı veya URL adresi girin..." value="https://google.com">
+            </div>
+            <button class="action-btn" onclick="generateQRCode()">QR Kod Oluştur</button>
+            
+            <div id="qrResultContainer" style="margin-top: 30px; display: none; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <img id="qrImage" src="" alt="QR Kodu" style="display: block; max-width: 100%;">
+            </div>
+        </div>
+    </section>
+
+    <!-- K. Vücut Kitle İndeksi (Çalışan Yeni Araç) -->
+    <section id="tool-bmi" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Vücut Kitle İndeksi</h2>
+            <div class="input-group">
+                <input type="number" id="bmiHeight" placeholder="Boyunuz (cm) Örn: 175" value="175">
+                <input type="number" id="bmiWeight" placeholder="Kilonuz (kg) Örn: 70" value="70">
+            </div>
+            <button class="action-btn" onclick="calculateBMI()">Hesapla</button>
+            <div class="result-display" id="bmiResult" style="flex-direction: column; gap: 10px; margin-top: 20px;"></div>
+        </div>
+    </section>
+
+    <!-- L. Pratik Not Defteri (Çalışan Yeni Araç - LocalStorage Destekli) -->
+    <section id="tool-notepad" class="view-section">
+        <div class="tool-page">
+            <button class="btn-back" onclick="navigate('dashboard')">⬅ Geri</button>
+            <h2 class="tool-title">Pratik Not Defteri</h2>
+            <div class="input-group" style="max-width: 500px;">
+                <input type="text" id="noteTitle" placeholder="Not Başlığı...">
+                <textarea id="noteContent" placeholder="Not içeriğinizi buraya yazın..."></textarea>
+            </div>
+            <button class="action-btn" onclick="saveNote()">Notu Kaydet</button>
+            
+            <div class="notes-grid" id="notesContainer"></div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 ToolBox - Tüm Hakları Saklıdır.
+    </footer>
+
+    <script>
+        // --- SPA Navigasyon Sistemi ve History API ---
+        let isModalOpen = false;
+
+        function navigate(viewId, pushToHistory = true) {
+            if (isModalOpen) closeModal(false);
+            
+            document.querySelectorAll('.view-section').forEach(el => { el.classList.remove('active'); });
+            const target = document.getElementById(viewId);
+            if(target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Belirli sonuç kutularını sıfırla (renk, fatura, notlar hariç)
+                if(viewId !== 'tool-color' && viewId !== 'tool-invoice' && viewId !== 'tool-notepad') {
+                    document.querySelectorAll('.result-display').forEach(el => el.innerHTML = '');
+                }
+                
+                if(viewId === 'tool-wheel') { drawWheel(); renderWheelItems(); }
+                if(viewId === 'tool-notepad') { loadNotes(); }
+                
+                if(pushToHistory) {
+                    history.pushState({ page: viewId }, "", `#${viewId}`);
+                }
+            }
+        }
+
+        // Geri tuşu yakalama mantığı (Telefon ve PC)
+        window.addEventListener('popstate', (e) => {
+            if (isModalOpen) {
+                closeModal(false);
+                const activeView = document.querySelector('.view-section.active').id;
+                history.pushState({ page: activeView }, "", `#${activeView}`);
+                return;
+            }
+
+            if (e.state && e.state.page) {
+                if(e.state.page === 'home') {
+                    navigate('home', false);
+                } else if(e.state.page === 'dashboard') {
+                    navigate('dashboard', false);
+                } else {
+                    navigate('dashboard', false); 
+                    history.replaceState({ page: 'dashboard' }, "", "#dashboard");
+                }
+            } else {
+                navigate('home', false);
+            }
+        });
+
+        // Başlangıçta ana sayfayı kur ve araç sayısını göster
+        window.onload = () => {
+            history.replaceState({ page: 'home' }, "", "#home");
+            navigate('home', false);
+            
+            // Dinamik olarak dashboard grid'indeki araç sayısını hesapla ve ekrana yaz
+            const count = document.querySelectorAll('#mainDashboardGrid .tool-shortcut').length;
+            document.getElementById('toolsCounterBadge').innerText = `🚀 Sistemde Toplam ${count} Adet Aktif Araç Var!`;
+        };
+
+        // Modal (Kazanan / Sonuç Pencereleri)
+        function showModal(title, text) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            const modal = document.getElementById('resultModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+            isModalOpen = true;
+            history.pushState({ modal: true }, "", "#result");
+        }
+
+        function closeModal(goBackInHistory = true) {
+            const modal = document.getElementById('resultModal');
+            modal.classList.remove('show');
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+            isModalOpen = false;
+            
+            if (goBackInHistory) {
+                history.back();
+            }
+        }
+
+        // --- Karar Çarkı ---
+        const canvas = document.getElementById("wheelCanvas");
+        const ctx = canvas.getContext("2d");
+        let wheelCurrentDeg = 0;
+        let isSpinning = false;
+        let optionsList = ["Sinema", "Tiyatro", "Evde Kal", "Yürüyüş", "Oyun Oyna", "Kitap Oku", "Yemek Yap"];
+        const colorPalette = ["#ff007f", "#00d2ff", "#ffb703", "#7209b7", "#06d6a0", "#f72585", "#e63946", "#f4a261"];
+
+        function handleEnter(e) { if (e.key === 'Enter') addOption(); }
+
+        function addOption() {
+            const input = document.getElementById('newOptionInput');
+            const val = input.value.trim();
+            if(val !== "") {
+                optionsList.push(val);
+                input.value = "";
+                renderWheelItems(); drawWheel();
+            }
+        }
+
+        function removeOption(index) {
+            if(optionsList.length > 1) {
+                optionsList.splice(index, 1);
+                renderWheelItems(); drawWheel();
+            } else { alert("Çarkta en az 1 seçenek kalmalıdır!"); }
+        }
+
+        function renderWheelItems() {
+            const list = document.getElementById('wheelItemsList');
+            list.innerHTML = "";
+            optionsList.forEach((opt, idx) => {
+                const tag = document.createElement('div');
+                tag.className = 'wheel-item-tag';
+                tag.innerHTML = `<span>${opt}</span> <button onclick="removeOption(${idx})">X</button>`;
+                list.appendChild(tag);
+            });
+        }
+
+        function drawWheel() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = centerX - 10;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(optionsList.length === 0) return;
+
+            const sliceAngle = (2 * Math.PI) / optionsList.length;
+            for (let i = 0; i < optionsList.length; i++) {
+                const startAngle = i * sliceAngle;
+                const endAngle = startAngle + sliceAngle;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = colorPalette[i % colorPalette.length];
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(255,255,255,0.4)";
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#ffffff";
+                let fontSize = optionsList.length > 10 ? 16 : 22;
+                ctx.font = `bold ${fontSize}px sans-serif`;
+                ctx.shadowColor = "rgba(0,0,0,0.8)";
+                ctx.shadowBlur = 5;
+                let text = optionsList[i];
+                if(text.length > 18) text = text.substring(0, 16) + '..';
+                ctx.fillText(text, radius - 20, 8); 
+                ctx.restore();
+            }
+        }
+
+        function spinWheel() {
+            if(isSpinning || optionsList.length === 0) return;
+            isSpinning = true;
+            
+            const spinTime = 4; 
+            const randomDeg = Math.floor(Math.random() * 360) + (360 * 6); 
+            wheelCurrentDeg += randomDeg;
+
+            canvas.style.transition = `transform ${spinTime}s cubic-bezier(0.17, 0.67, 0.12, 0.99)`;
+            canvas.style.transform = `rotate(${wheelCurrentDeg}deg)`;
+
+            setTimeout(() => {
+                const sliceDeg = 360 / optionsList.length;
+                const actualDeg = wheelCurrentDeg % 360;
+                let winningDeg = (360 - actualDeg + 270) % 360; 
+                let winningIndex = Math.floor(winningDeg / sliceDeg);
+                
+                isSpinning = false;
+                showModal("🏆 Kazanan Keşfedildi!", `Sonuç: ${optionsList[winningIndex]}`);
+            }, spinTime * 1000);
+        }
+
+        // --- Rastgele Sayı ---
+        function generateNumber() {
+            const min = parseInt(document.getElementById('numMin').value);
+            const max = parseInt(document.getElementById('numMax').value);
+            const resultBox = document.getElementById('numResult');
+            if (min >= max) { resultBox.innerText = "Hata!"; return; }
+
+            let counter = 0;
+            const interval = setInterval(() => {
+                resultBox.innerText = Math.floor(Math.random() * (max - min + 1)) + min;
+                counter++;
+                if (counter > 18) { 
+                    clearInterval(interval);
+                    resultBox.style.color = "var(--accent)";
+                    setTimeout(() => resultBox.style.color = "white", 600);
+                }
+            }, 50);
+        }
+
+        // --- Zar Atma (Hata Giderildi ve Senkronize Edildi) ---
+        function rollDice() {
+            const cube = document.getElementById('diceCube');
+            const resultBox = document.getElementById('diceResult');
+            resultBox.innerHTML = ""; 
+            
+            cube.style.transition = "transform 1.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+            
+            let rotX = 360 * (Math.floor(Math.random() * 3) + 3); 
+            let rotY = 360 * (Math.floor(Math.random() * 3) + 3); 
+            
+            let finalFace = Math.floor(Math.random() * 6) + 1;
+            
+            // Yüzlerin 3D konumlandırmasıyla gelen sayının tam eşleşmesi sağlandı
+            switch(finalFace) {
+                case 1: rotX += 0;   rotY += 0; break; 
+                case 2: rotX += 0;   rotY += 180; break; 
+                case 3: rotX += 0;   rotY += -90; break; 
+                case 4: rotX += 0;   rotY += 90; break; 
+                case 5: rotX += -90; rotY += 0; break; 
+                case 6: rotX += 90;  rotY += 0; break; 
+            }
+
+            cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+            
+            setTimeout(() => {
+                resultBox.innerHTML = `Sonuç: <span style='color: var(--accent)'>${finalFace}</span>`;
+            }, 1600);
+        }
+
+        // --- Yazı Tura ---
+        let coinRot = 0;
+        function flipCoin() {
+            const coin = document.getElementById('coin3D');
+            const resultBox = document.getElementById('coinResult');
+            resultBox.innerHTML = ""; 
+            
+            const isYazi = Math.random() > 0.5;
+            const extraRot = isYazi ? 180 : 0; 
+            
+            coinRot += (2520 + extraRot); 
+            coin.style.transform = `rotateY(${coinRot}deg)`;
+
+            setTimeout(() => {
+                resultBox.innerHTML = `Gelen: <span style='color: #ffd700'>${isYazi ? 'YAZI' : 'TURA'}</span>`;
+            }, 3000);
+        }
+
+        // --- Şifre Üretici (Geçmiş Kontrollü %100 Benzersiz) ---
+        const generatedHistory = new Set();
+        function generatePassword() {
+            const len = parseInt(document.getElementById('passLen').value);
+            const resultBox = document.getElementById('passResult');
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            
+            let counter = 0;
+            const interval = setInterval(() => {
+                let tempPass = "";
+                for(let i=0; i<len; i++) tempPass += chars.charAt(Math.floor(Math.random() * chars.length));
+                resultBox.innerText = tempPass;
+                counter++;
+                
+                if(counter > 18) {
+                    clearInterval(interval);
+                    
+                    let finalPass = tempPass;
+                    // Eğer geçmişte üretildiyse benzersiz olana kadar baştan üretir
+                    while(generatedHistory.has(finalPass)) {
+                        finalPass = "";
+                        for(let i=0; i<len; i++) finalPass += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    generatedHistory.add(finalPass);
+                    resultBox.innerText = finalPass;
+                    
+                    resultBox.style.color = "var(--accent)";
+                    setTimeout(() => resultBox.style.color = "white", 600);
+                }
+            }, 50);
+        }
+
+        // --- Kronometre ---
+        let timerInterval;
+        let startTime;
+        let elapsedTime = 0;
+        let isTimerRunning = false;
+
+        function updateTimer() {
+            const now = Date.now();
+            const timeDiff = now - startTime + elapsedTime;
+            
+            let hrs = Math.floor((timeDiff / (1000 * 60 * 60)) % 24);
+            let mins = Math.floor((timeDiff / 1000 / 60) % 60);
+            let secs = Math.floor((timeDiff / 1000) % 60);
+            let ms = Math.floor((timeDiff % 1000) / 10);
+
+            document.getElementById('timerDisplay').innerText = 
+                `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if(!isTimerRunning) {
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 10);
+                isTimerRunning = true;
+            }
+        }
+
+        function pauseTimer() {
+            if(isTimerRunning) {
+                clearInterval(timerInterval);
+                elapsedTime += Date.now() - startTime;
+                isTimerRunning = false;
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            elapsedTime = 0;
+            document.getElementById('timerDisplay').innerText = "00:00:00.00";
+        }
+
+        // --- Renk Üretici ---
+        function generateRandomColor() {
+            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            document.getElementById('colorPreview').style.background = randomColor;
+            document.getElementById('colorResult').innerText = randomColor;
+        }
+
+        function copyColor() {
+            const colorText = document.getElementById('colorResult').innerText;
+            navigator.clipboard.writeText(colorText).then(() => {
+                alert("Renk kopyalandı: " + colorText);
+            });
+        }
+
+        // --- Kelime Sayacı ---
+        function countText() {
+            const text = document.getElementById('textCounter').value;
+            const charCount = text.length;
+            const wordCount = text.trim().split(/\s+/).filter(item => item !== '').length;
+            
+            document.getElementById('charCount').innerText = charCount;
+            document.getElementById('wordCount').innerText = wordCount;
+        }
+
+        // --- Fatura Yazıcı (Yeni) ---
+        function calculateInvoice() {
+            const title = document.getElementById('invTitle').value;
+            const item = document.getElementById('invItem').value;
+            const price = parseFloat(document.getElementById('invPrice').value) || 0;
+            const qty = parseFloat(document.getElementById('invQty').value) || 0;
+            const kdvPercent = parseFloat(document.getElementById('invKdv').value) || 0;
+
+            const subTotal = price * qty;
+            const kdvAmount = subTotal * (kdvPercent / 100);
+            const grandTotal = subTotal + kdvAmount;
+
+            document.getElementById('displayInvTitle').innerText = title;
+            document.getElementById('invDate').innerText = "Düzenleme Tarihi: " + new Date().toLocaleDateString('tr-TR');
+            
+            document.getElementById('tdItem').innerText = item;
+            document.getElementById('tdQty').innerText = qty;
+            document.getElementById('tdPrice').innerText = price.toFixed(2) + " TL";
+            document.getElementById('tdSubTotal').innerText = subTotal.toFixed(2) + " TL";
+
+            document.getElementById('invMatrah').innerText = subTotal.toFixed(2);
+            document.getElementById('invKdvAmount').innerText = kdvAmount.toFixed(2);
+            document.getElementById('invGrandTotal').innerText = grandTotal.toFixed(2);
+
+            document.getElementById('invoiceBox').style.display = 'block';
+        }
+
+        // --- QR Kod Üretici (Yeni) ---
+        function generateQRCode() {
+            const text = document.getElementById('qrInput').value.trim();
+            if(!text) return;
+            
+            const qrImg = document.getElementById('qrImage');
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}`;
+            document.getElementById('qrResultContainer').style.display = 'block';
+        }
+
+        // --- Vücut Kitle İndeksi (Yeni) ---
+        function calculateBMI() {
+            const heightCm = parseFloat(document.getElementById('bmiHeight').value);
+            const weightKg = parseFloat(document.getElementById('bmiWeight').value);
+            const resBox = document.getElementById('bmiResult');
+
+            if(!heightCm || !weightKg) { resBox.innerText = "Lütfen geçerli değerler girin."; return; }
+
+            const heightM = heightCm / 100;
+            const bmi = weightKg / (heightM * heightM);
+            let status = "";
+            let color = "";
+
+            if(bmi < 18.5) { status = "Zayıf 🦴"; color = "#00d2ff"; }
+            else if(bmi < 24.9) { status = "Normal / İdeal Kilo ✅"; color = "#06d6a0"; }
+            else if(bmi < 29.9) { status = "Fazla Kilolu ⚠️"; color = "#ffb703"; }
+            else { status = "Obezite / Aşırı Kilolu 🚨"; color = "#ff007f"; }
+
+            resBox.innerHTML = `Vücut Kitle İndeksiniz: <span style="color: ${color}">${bmi.toFixed(1)}</span><br><span style="font-size: 1.5rem; color: #fff; background: ${color}44; padding: 5px 15px; border-radius: 10px;">Durum: ${status}</span>`;
+        }
+
+        // --- Pratik Not Defteri (LocalStorage) ---
+        function saveNote() {
+            const titleInput = document.getElementById('noteTitle');
+            const contentInput = document.getElementById('noteContent');
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+
+            if(!title || !content) return;
+
+            let notes = JSON.parse(localStorage.getItem('toolbox_notes')) || [];
+            notes.push({ id: Date.now(), title, content });
+            localStorage.setItem('toolbox_notes', JSON.stringify(notes));
+
+            titleInput.value = "";
+            contentInput.value = "";
+            loadNotes();
+        }
+
+        function loadNotes() {
+            const container = document.getElementById('notesContainer');
+            container.innerHTML = "";
+            let notes = JSON.parse(localStorage.getItem('toolbox_notes')) || [];
+
+            if(notes.length === 0) {
+                container.innerHTML = `<p style="opacity: 0.5; grid-column: 1/-1; text-align: center;">Henüz hiç not eklenmemiş.</p>`;
+                return;
+            }
+
+            notes.forEach(note => {
+                const card = document.createElement('div');
+                card.className = 'note-card';
+                card.innerHTML = `
+                    <button class="note-delete-btn" onclick="deleteNote(${note.id})">X</button>
+                    <h4>${note.title}</h4>
+                    <p>${note.content}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function deleteNote(id) {
+            let notes = JSON.parse(localStorage.getItem('toolbox_notes')) || [];
+            notes = notes.filter(n => n.id !== id);
+            localStorage.setItem('toolbox_notes', JSON.stringify(notes));
+            loadNotes();
+        }
+    </script>
+</body>
+</html>
